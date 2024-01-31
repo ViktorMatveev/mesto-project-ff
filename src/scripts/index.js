@@ -1,12 +1,15 @@
-// @todo: Темплейт карточки
+/** @todo: Открытие и закрытие модальных окон
+ * @todo: Закрытие попапа кликом на оверлэй и Esc
+ * @todo: Редактирование информации о себе
+ * @todo: Форма добавления карточки
+ * @todo: Добавление новой карточки
+ * @todo: Лайк карточки
+ * @todo: Открытие попапа с картинкой
+ * @todo: Плавное открытие и закрытие попапов
+ * **/
 
-// @todo: DOM узлы
-
-// @todo: Функция создания карточки
-
-// @todo: Функция удаления карточки
-
-// @todo: Вывести карточки на страницу
+import '../pages/index.css';
+import { initialCards } from './cards';
 
 const places = document.querySelector('.places');
 const placesList = document.querySelector('.places__list');
