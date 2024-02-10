@@ -15,6 +15,7 @@ import { initialCards } from './conmponents/cards';
 
 const editButton = document.querySelector('.profile__edit-button');
 const addButton = document.querySelector('.profile__add-button');
+const closeButtons = Array.from(document.querySelectorAll('.popup__close'));
 
 // -popups-
 
@@ -22,6 +23,9 @@ const popups = Array.from(document.querySelectorAll('.popup'));
 const popupProfileEdit = document.querySelector('.popup_type_edit');
 const popupNewCard = document.querySelector('.popup_type_new-card');
 const popupImage = document.querySelector('.popup_type_image');
+
+const profileName = document.querySelector('.profile__title');
+const profileJob = document.querySelector('.profile__description');
 
 popups.forEach((popup) => popup.classList.add('popup_is-animated'));
 
@@ -43,9 +47,19 @@ showCards(initialCards);
 // --вызов и зарытие модальных окон--
 editButton.addEventListener('click', () => {
   openModal(popupProfileEdit);
+  name.value = profileName.textContent;
+  job.value = profileJob.textContent;
 });
 
-addButton.addEventListener('click', () => openModal(popupNewCard));
+addButton.addEventListener('click', function () {
+  openModal(popupNewCard), formNewPlace.reset();
+});
+
+closeButtons.forEach((button) =>
+  button.addEventListener('click', function () {
+    closeModal(button.closest('.popup'));
+  })
+);
 
 function openImgPopup(evt) {
   if (evt.target.classList.contains('card__image')) {
@@ -55,8 +69,6 @@ function openImgPopup(evt) {
     scaledImg.alt = evt.target.alt;
     const cardTitle = popupImage.querySelector('.popup__caption');
     cardTitle.textContent = evt.target.alt;
-
-    return scaledImg;
   }
 }
 
@@ -68,8 +80,6 @@ const job = formEdit.description;
 
 function handleFormEditSubmit(evt) {
   evt.preventDefault();
-  const profileName = document.querySelector('.profile__title');
-  const profileJob = document.querySelector('.profile__description');
   profileName.textContent = name.value;
   profileJob.textContent = job.value;
   closeModal(popupProfileEdit);
