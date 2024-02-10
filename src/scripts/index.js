@@ -1,16 +1,15 @@
-/** done! @todo: Открытие и закрытие модальных окон
- * @todo: Закрытие попапа кликом на оверлэй и Esc
- * @todo: Редактирование информации о себе
- * @todo: Форма добавления карточки
- * @todo: Добавление новой карточки
- * done! @todo: Лайк карточки
- * done! @todo: Открытие попапа с картинкой
- * done! @todo: Плавное открытие и закрытие попапов
- * **/
-
 import '../pages/index.css';
-import { initialCards } from './cards';
-import { openModal, closeModal } from './modal';
+
+import {
+  placesList,
+  craeteCard,
+  toggleIsLiked,
+  deleteCard,
+} from './conmponents/card';
+
+import { openModal, closeModal } from './conmponents/modal';
+
+import { initialCards } from './conmponents/cards';
 
 // -buttons-
 
@@ -18,56 +17,13 @@ const editButton = document.querySelector('.profile__edit-button');
 const addButton = document.querySelector('.profile__add-button');
 
 // -popups-
+
 const popups = Array.from(document.querySelectorAll('.popup'));
 const popupProfileEdit = document.querySelector('.popup_type_edit');
 const popupNewCard = document.querySelector('.popup_type_new-card');
 const popupImage = document.querySelector('.popup_type_image');
-// const scaledImg = popupImage.querySelector('.popup__image');
-
-const pageContent = document.querySelector('.page__content');
-const places = document.querySelector('.places');
-const placesList = document.querySelector('.places__list');
-const cardTemplate = document.querySelector('#card-template').content;
 
 popups.forEach((popup) => popup.classList.add('popup_is-animated'));
-
-function craeteCard(
-  cardInfoName,
-  cardInfoLink,
-  toggleIsLiked,
-  deleteCard,
-  openImgPopup
-) {
-  const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
-  const cardTitle = popupImage.querySelector('.popup__caption');
-  cardElement.querySelector('.card__image').src = cardInfoLink;
-  cardElement.querySelector('.card__image').alt = cardInfoName;
-  cardElement.querySelector('.card__title').textContent = cardInfoName;
-
-  // scaledImg.src = cardInfoLink;
-  // scaledImg.alt = cardInfoName;
-  // cardTitle.textContent = cardInfoName;
-
-  cardElement.addEventListener('click', toggleIsLiked);
-
-  cardElement.addEventListener('click', deleteCard);
-
-  cardElement.addEventListener('click', openImgPopup);
-
-  return cardElement;
-}
-
-function toggleIsLiked(evt) {
-  if (evt.target.classList.contains('card__like-button')) {
-    evt.target.classList.toggle('card__like-button_is-active');
-  }
-}
-
-function deleteCard(evt) {
-  if (evt.target.classList.contains('card__delete-button')) {
-    evt.target.closest('.card').remove();
-  }
-}
 
 function showCards(cards) {
   cards.forEach((card) => {
@@ -84,15 +40,12 @@ function showCards(cards) {
 
 showCards(initialCards);
 
-// -ВЫЗОВ И ЗАКРЫТИЕ МОДАЛЬНЫХ ОКОН-
-
-editButton.addEventListener('click', () => openModal(popupProfileEdit));
+// --вызов и зарытие модальных окон--
+editButton.addEventListener('click', () => {
+  openModal(popupProfileEdit);
+});
 
 addButton.addEventListener('click', () => openModal(popupNewCard));
-
-pageContent.addEventListener('click', (evt) => {
-  closeModal(evt);
-});
 
 function openImgPopup(evt) {
   if (evt.target.classList.contains('card__image')) {
@@ -106,3 +59,36 @@ function openImgPopup(evt) {
     return scaledImg;
   }
 }
+
+// --Работа с формами--
+
+const formEdit = document.forms['edit-profile'];
+const name = formEdit.name;
+const job = formEdit.description;
+
+function handleFormEditSubmit(evt) {
+  evt.preventDefault();
+  const profileName = document.querySelector('.profile__title');
+  const profileJob = document.querySelector('.profile__description');
+  profileName.textContent = name.value;
+  profileJob.textContent = job.value;
+  closeModal(popupProfileEdit);
+}
+formEdit.addEventListener('submit', handleFormEditSubmit);
+
+const formNewPlace = document.forms['new-place'];
+const namePlace = formNewPlace['place-name'];
+const linkPlace = formNewPlace['link'];
+
+function handleFormNewPlaceSubmit(evt) {
+  evt.preventDefault();
+  const newCard = craeteCard(
+    namePlace.value,
+    linkPlace.value,
+    toggleIsLiked,
+    deleteCard
+  );
+  placesList.prepend(newCard);
+  closeModal(popupNewCard);
+}
+formNewPlace.addEventListener('submit', handleFormNewPlaceSubmit);
