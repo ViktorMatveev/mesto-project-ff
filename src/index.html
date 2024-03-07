@@ -46,6 +46,34 @@
       <footer class="footer page__section">
         <p class="footer__copyright">© 2021 Mesto Russia</p>
       </footer>
+      <div class="popup popup_type_avatar">
+        <div class="popup__content">
+          <button
+            type="button"
+            class="popup__close"
+            aria-label="Закрыть"
+          ></button>
+          <h3 class="popup__title">Обновить аватар</h3>
+          <form class="popup__form" name="edit-avatar" novalidate>
+            <fieldset class="popup__form-set">
+              <label class="popup__form-field">
+                <input
+                  id="avatar-input"
+                  type="url"
+                  name="avatar"
+                  class="popup__input popup__input_type_avatar"
+                  placeholder="Ссылка на новый аватар"
+                  required
+                />
+                <span class="popup__error avatar-input-error"></span>
+              </label>
+              <button type="submit" class="button popup__button">
+                Сохранить
+              </button>
+            </fieldset>
+          </form>
+        </div>
+      </div>
       <div class="popup popup_type_edit">
         <div class="popup__content">
           <button
@@ -54,24 +82,42 @@
             aria-label="Закрыть"
           ></button>
           <h3 class="popup__title">Редактировать профиль</h3>
-          <form class="popup__form" name="edit-profile">
-            <input
-              type="text"
-              name="name"
-              class="popup__input popup__input_type_name"
-              placeholder="Имя"
-              required
-            />
-            <input
-              type="text"
-              name="description"
-              class="popup__input popup__input_type_description"
-              placeholder="Занятие"
-              required
-            />
-            <button type="submit" class="button popup__button">
-              Сохранить
-            </button>
+          <form class="popup__form" name="edit-profile" novalidate>
+            <fieldset class="popup__form-set">
+              <label class="popup__form-field">
+                <input
+                  id="name-input"
+                  type="text"
+                  name="name"
+                  class="popup__input popup__input_type_name"
+                  placeholder="Имя"
+                  required
+                  minlength="2"
+                  maxlength="40"
+                  pattern="^[a-zA-Zа-яёА-ЯЁ\-\s]+$"
+                  data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
+                />
+                <span class="popup__error name-input-error"></span>
+              </label>
+              <label class="popup__form-field">
+                <input
+                  id="discription-input"
+                  type="text"
+                  name="description"
+                  class="popup__input popup__input_type_description"
+                  placeholder="Занятие"
+                  required
+                  minlength="2"
+                  maxlength="200"
+                  pattern="^[a-zA-Zа-яёА-ЯЁ\-\s]+$"
+                  data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
+                />
+                <span class="popup__error discription-input-error"></span>
+              </label>
+              <button type="submit" class="button popup__button">
+                Сохранить
+              </button>
+            </fieldset>
           </form>
         </div>
       </div>
@@ -84,23 +130,37 @@
           ></button>
           <h3 class="popup__title">Новое место</h3>
           <form class="popup__form" name="new-place">
-            <input
-              type="text"
-              name="place-name"
-              class="popup__input popup__input_type_card-name"
-              placeholder="Название"
-              required
-            />
-            <input
-              type="url"
-              name="link"
-              class="popup__input popup__input_type_url"
-              placeholder="Ссылка на картинку"
-              required
-            />
-            <button type="submit" class="button popup__button">
-              Сохранить
-            </button>
+            <fieldset class="popup__form-set">
+              <label class="popup__form-field">
+                <input
+                  id="card-name-input"
+                  type="text"
+                  name="place-name"
+                  class="popup__input popup__input_type_card-name"
+                  placeholder="Название"
+                  required
+                  minlength="2"
+                  maxlength="30"
+                  pattern="^[a-zA-Zа-яёА-ЯЁ\-\s]+$"
+                  data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
+                />
+                <span class="popup__error card-name-input-error"></span>
+              </label>
+              <label class="popup__form-field">
+                <input
+                  id="url-input"
+                  type="url"
+                  name="link"
+                  class="popup__input popup__input_type_url"
+                  placeholder="Ссылка на картинку"
+                  required
+                />
+                <span class="popup__error url-input-error"></span>
+              </label>
+              <button type="submit" class="button popup__button">
+                Сохранить
+              </button>
+            </fieldset>
           </form>
         </div>
       </div>
@@ -127,11 +187,14 @@
         ></button>
         <div class="card__description">
           <h2 class="card__title"></h2>
-          <button
-            type="button"
-            class="card__like-button"
-            aria-label="Нравится"
-          ></button>
+          <div class="card__like">
+            <button
+              type="button"
+              class="card__like-button"
+              aria-label="Нравится"
+            ></button>
+            <span class="card__like-counter"></span>
+          </div>
         </div>
       </li>
     </template>
