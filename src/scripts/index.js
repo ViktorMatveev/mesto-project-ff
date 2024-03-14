@@ -1,10 +1,10 @@
 import '../pages/index.css';
 
 import {
-  placesList,
   craeteCard,
-  toggleIsLiked,
   deleteCard,
+  changeLike,
+  cardToDelete,
 } from './conmponents/card';
 
 import { openModal, closeModal } from './conmponents/modal';
@@ -22,10 +22,15 @@ import {
   updateUserInfo,
   updateUserAvatar,
   addNewCardRequest,
+  addLikeRequest,
+  removeLikeRequest,
+  removeCard,
 } from './conmponents/api';
-// -buttons-
 
 let myUserId;
+const placesList = document.querySelector('.places__list');
+
+// -buttons-
 
 const editButton = document.querySelector('.profile__edit-button');
 const addButton = document.querySelector('.profile__add-button');
@@ -38,12 +43,33 @@ const popupAvatar = document.querySelector('.popup_type_avatar');
 const popupProfileEdit = document.querySelector('.popup_type_edit');
 const popupNewCard = document.querySelector('.popup_type_new-card');
 const popupImage = document.querySelector('.popup_type_image');
+const popupDelete = document.querySelector('.popup_type_delete-card');
+const cardTitle = popupImage.querySelector('.popup__caption');
+const scaledImg = popupImage.querySelector('.popup__image');
 
 const profileName = document.querySelector('.profile__title');
 const profileJob = document.querySelector('.profile__description');
 const avatarImg = document.querySelector('.profile__image');
 
 popups.forEach((popup) => popup.classList.add('popup_is-animated'));
+
+// слушатель обработчика лайка
+
+function handleLikeCard(status, cardData, card) {
+  if (!status) {
+    addLikeRequest(cardData._id)
+      .then((res) => changeLike(res, card))
+      .catch((err) => {
+        console.log(err); // выводим ошибку в консоль
+      });
+  } else {
+    removeLikeRequest(cardData._id)
+      .then((res) => changeLike(res, card))
+      .catch((err) => {
+        console.log(err); // выводим ошибку в консоль
+      });
+  }
+}
 
 // --вызов и зарытие модальных окон--
 // аватар
@@ -70,8 +96,6 @@ addButton.addEventListener('click', function () {
     openModal(popupNewCard);
 });
 
-// закрыть
-
 closeButtons.forEach((button) =>
   button.addEventListener('click', function () {
     closeModal(button.closest('.popup'));
@@ -83,10 +107,8 @@ closeButtons.forEach((button) =>
 function openImgPopup(evt) {
   if (evt.target.classList.contains('card__image')) {
     openModal(popupImage);
-    const scaledImg = popupImage.querySelector('.popup__image');
     scaledImg.src = evt.target.src;
     scaledImg.alt = evt.target.alt;
-    const cardTitle = popupImage.querySelector('.popup__caption');
     cardTitle.textContent = evt.target.alt;
   }
 }
@@ -128,7 +150,6 @@ const job = formEdit.description;
 const saveUserInfoButton = formEdit.querySelector('.popup__button');
 
 function handleFormEditSubmit(evt) {
-  console.log(saveUserInfoButton.textContent);
   updateUserInfo(name.value, job.value)
     .then((user) => {
       profileName.textContent = user.name;
@@ -154,12 +175,12 @@ const savePlaceButton = formNewPlace.querySelector('.popup__button');
 
 function handleFormNewPlaceSubmit(evt) {
   addNewCardRequest(namePlace.value, linkPlace.value)
-    .then((card) => {
+    .then((cardData) => {
       const newCard = craeteCard(
-        card,
+        cardData,
         myUserId,
-        toggleIsLiked,
-        deleteCard,
+        handleLikeCard,
+        handleDeleteCard,
         openImgPopup
       );
       placesList.prepend(newCard);
@@ -179,6 +200,26 @@ formNewPlace.addEventListener('submit', () => {
     linkPlace,
     savePlaceButton
   );
+});
+
+// удаление карточки
+
+const formDeleteCard = document.forms['delete-card'];
+const confirmDeleteButton = formDeleteCard.querySelector('.popup__button');
+
+function handleDeleteCard(card) {
+  removeCard(card.id)
+    .then((res) => {
+      deleteCard(card.card);
+      closeModal(popupDelete);
+    })
+    .catch((err) => {
+      console.log(err); // выводим ошибку в консоль
+    });
+}
+
+formDeleteCard.addEventListener('submit', () => {
+  handleDeleteCard(cardToDelete);
 });
 
 // --Валидация форм--
@@ -203,16 +244,14 @@ Promise.all([getUserInfo(), getInitialCards()])
   });
 
 function showCards(cards) {
-  cards.forEach((card) => {
+  cards.forEach((cardData) => {
     const cardElement = craeteCard(
-      card,
+      cardData,
       myUserId,
-      toggleIsLiked,
-      deleteCard,
+      handleLikeCard,
+      handleDeleteCard,
       openImgPopup
     );
     placesList.append(cardElement);
   });
 }
-
-// --API--

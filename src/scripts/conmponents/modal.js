@@ -15,6 +15,7 @@ function clickHandler(evt) {
 
 function closeModal(popup) {
   popup.classList.remove('popup_is-opened');
+  popup.removeEventListener('click', clickHandler);
   window.removeEventListener('keydown', keyHandler);
 }
 
