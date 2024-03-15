@@ -1,15 +1,12 @@
-let currentPopup = null;
 function openModal(popup) {
   popup.classList.add('popup_is-opened');
-  currentPopup = popup;
   popup.addEventListener('click', clickHandler);
   window.addEventListener('keydown', keyHandler);
-  return currentPopup;
 }
 
 function clickHandler(evt) {
-  if (evt.target === currentPopup) {
-    closeModal(currentPopup);
+  if (evt.target === document.querySelector('.popup_is-opened')) {
+    closeModal(document.querySelector('.popup_is-opened'));
   }
 }
 
@@ -21,7 +18,7 @@ function closeModal(popup) {
 
 function keyHandler(evt) {
   if (evt.key === 'Escape') {
-    closeModal(currentPopup);
+    closeModal(document.querySelector('.popup_is-opened'));
   }
 }
 export { openModal, closeModal };

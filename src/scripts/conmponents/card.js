@@ -1,8 +1,4 @@
-import { openModal } from './modal';
-
 const cardTemplate = document.querySelector('#card-template').content;
-const popupDelete = document.querySelector('.popup_type_delete-card');
-let cardToDelete = {};
 
 function craeteCard(
   cardData,
@@ -32,9 +28,7 @@ function craeteCard(
   // слушатель на кнопку удаления
 
   deleteButton.addEventListener('click', () => {
-    openModal(popupDelete);
-    cardToDelete.card = cardElement;
-    cardToDelete.id = cardData._id;
+    handleDeleteCard(cardElement, cardData);
   });
 
   // обработчик лайка при загруке страницы
@@ -76,11 +70,4 @@ function deleteCard(card) {
   card.remove();
 }
 
-export {
-  cardTemplate,
-  craeteCard,
-  toggleIsLiked,
-  deleteCard,
-  changeLike,
-  cardToDelete,
-};
+export { cardTemplate, craeteCard, toggleIsLiked, deleteCard, changeLike };

@@ -1,11 +1,6 @@
 import '../pages/index.css';
 
-import {
-  craeteCard,
-  deleteCard,
-  changeLike,
-  cardToDelete,
-} from './conmponents/card';
+import { craeteCard, deleteCard, changeLike } from './conmponents/card';
 
 import { openModal, closeModal } from './conmponents/modal';
 
@@ -29,6 +24,7 @@ import {
 
 let myUserId;
 const placesList = document.querySelector('.places__list');
+const cardToDelete = {};
 
 // -buttons-
 
@@ -125,11 +121,11 @@ function handleFormNewAvatarSubmit(evt) {
   updateUserAvatar(linkAvatar.value)
     .then((user) => {
       avatarImg.style = `background-image: url(${user.avatar})`;
+      closeModal(popupAvatar);
     })
     .catch((err) => {
       console.log(err); // выводим ошибку в консоль
     });
-  closeModal(popupAvatar);
   saveAvatarButton.textContent = 'Сохранить';
 }
 formNewAvatar.addEventListener('submit', () => {
@@ -155,11 +151,11 @@ function handleFormEditSubmit(evt) {
       profileName.textContent = user.name;
       profileJob.textContent = user.about;
       closeModal(popupProfileEdit);
-      saveUserInfoButton.textContent = 'Сохранить';
     })
     .catch((err) => {
       console.log(err); // выводим ошибку в консоль
     });
+  saveUserInfoButton.textContent = 'Сохранить';
 }
 formEdit.addEventListener('submit', () => {
   saveUserInfoButton.textContent = 'Сохранение...';
@@ -185,11 +181,11 @@ function handleFormNewPlaceSubmit(evt) {
       );
       placesList.prepend(newCard);
       closeModal(popupNewCard);
-      savePlaceButton.textContent = 'Сохранить';
     })
     .catch((err) => {
       console.log(err); // выводим ошибку в консоль
     });
+  savePlaceButton.textContent = 'Сохранить';
 }
 
 formNewPlace.addEventListener('submit', () => {
@@ -205,21 +201,22 @@ formNewPlace.addEventListener('submit', () => {
 // удаление карточки
 
 const formDeleteCard = document.forms['delete-card'];
-const confirmDeleteButton = formDeleteCard.querySelector('.popup__button');
 
-function handleDeleteCard(card) {
-  removeCard(card.id)
+function handleDeleteCard(cardElement, cardData) {
+  openModal(popupDelete);
+  cardToDelete.card = cardElement;
+  cardToDelete.id = cardData._id;
+}
+
+formDeleteCard.addEventListener('submit', () => {
+  removeCard(cardToDelete.id)
     .then((res) => {
-      deleteCard(card.card);
+      deleteCard(cardToDelete.card);
       closeModal(popupDelete);
     })
     .catch((err) => {
       console.log(err); // выводим ошибку в консоль
     });
-}
-
-formDeleteCard.addEventListener('submit', () => {
-  handleDeleteCard(cardToDelete);
 });
 
 // --Валидация форм--
