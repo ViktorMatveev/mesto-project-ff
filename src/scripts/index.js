@@ -125,8 +125,10 @@ function handleFormNewAvatarSubmit(evt) {
     })
     .catch((err) => {
       console.log(err); // выводим ошибку в консоль
+    })
+    .finally(() => {
+      saveAvatarButton.textContent = 'Сохранить';
     });
-  saveAvatarButton.textContent = 'Сохранить';
 }
 formNewAvatar.addEventListener('submit', () => {
   saveAvatarButton.textContent = 'Сохранение...';
@@ -154,8 +156,10 @@ function handleFormEditSubmit(evt) {
     })
     .catch((err) => {
       console.log(err); // выводим ошибку в консоль
+    })
+    .finally(() => {
+      saveUserInfoButton.textContent = 'Сохранить';
     });
-  saveUserInfoButton.textContent = 'Сохранить';
 }
 formEdit.addEventListener('submit', () => {
   saveUserInfoButton.textContent = 'Сохранение...';
@@ -184,8 +188,10 @@ function handleFormNewPlaceSubmit(evt) {
     })
     .catch((err) => {
       console.log(err); // выводим ошибку в консоль
+    })
+    .finally(() => {
+      savePlaceButton.textContent = 'Сохранить';
     });
-  savePlaceButton.textContent = 'Сохранить';
 }
 
 formNewPlace.addEventListener('submit', () => {
